@@ -27,6 +27,10 @@
         .task-meta { font-size: 0.8rem; color: #94a3b8; }
         .completed .task-title { text-decoration: line-through; color: #94a3b8; }
         .completed .check-btn { background: #10b981; border-color: #10b981; color: white; }
+        /* Styling for checked/completed items */
+        .completed {opacity: 0.6;}
+        .completed .task-title {text-decoration: line-through;}
+        .completed .check-btn {background: #10b981 !important; /* Green like Microsoft To Do */border-color: #10b981 !important; color: white !important;}
     </style>
     <title>Hangarin | My Day</title>
 </head>
@@ -51,7 +55,11 @@
             {% for task in tasks %}
             <div class="task-item {% if task.status == 'Completed' %}completed{% endif %}">
                 <a href="{% url 'complete_task' task.id %}" class="check-btn">
-                    {% if task.status == 'Completed' %}<i class="fas fa-check"></i>{% endif %}
+                   {% if task.status == 'Completed' %}
+                        <i class="fas fa-check"></i>
+                            {% else %}
+                        <i class="fas fa-check" style="opacity: 0;"></i>
+                     {% endif %}
                 </a>
                 
                 <div class="task-info">
