@@ -22,14 +22,6 @@
         </div>
     </nav>
 
-    <div class="d-flex align-items-center">
-        <span class="text-light me-3 small">Hello, {{ user.username }}</span>
-        <form method="post" action="{% url 'admin:logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger btn-sm">Logout</button>
-        </form>
-    </div>
-
     <div class="container">
         <div class="row g-3">
             {% for task in tasks %}
