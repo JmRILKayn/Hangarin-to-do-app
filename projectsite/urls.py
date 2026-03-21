@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from hangarin.views import home, dashboard 
-from. import views
+from hangarin import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
