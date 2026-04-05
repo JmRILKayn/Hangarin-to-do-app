@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Task, Category
+from django.utils import timezone 
 
 def home(request):
     return render(request, 'hangarin/home.html')
@@ -30,24 +31,27 @@ def dashboard(request, filter_type=None):
 def add_task(request):
     if request.method == "POST":
         title = request.POST.get('title')
-        # We grab the first category as a default, or you can add a dropdown
+        # We grab the first category as a default
         category = Category.objects.first() 
         
         if title:
             Task.objects.create(
                 title=title,
                 category=category,
-                status='Pending'
+                status='Pending',
+                # FIX: Add a default deadline (today) to stop the IntegrityError
+                deadline=timezone.now().date() 
             )
     return redirect('dashboard')
 
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-    if request.method == "POST":
-        new_title = request.POST.get('title')
-        if new_title:
-            task.title = new_title
-            task.save()
+    # This reads the '?title=' part from the URL sent by the browser prompt
+    new_title = request.GET.get('title') 
+    
+    if new_title:
+        task.title = new_title
+        task.save()
     return redirect('dashboard')
 
 def complete_task(request, task_id):
