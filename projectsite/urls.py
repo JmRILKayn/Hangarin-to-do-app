@@ -20,8 +20,8 @@ from django.contrib.auth import views as auth_views
 from hangarin import views
 
 urlpatterns = [
+    path('', include('pwa.urls')), 
     path('admin/', admin.site.urls),
-    path('', include('pwa.urls')), # PWA Routes [cite: 138]
     path('', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/<str:filter_type>/', views.dashboard, name='dashboard_filter'),
