@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Task, Category
+from .models import Task, Category, Priority
 from django.utils import timezone 
 
 def home(request):
@@ -31,25 +31,22 @@ def add_task(request):
         title = request.POST.get('title')
         
         default_category = Category.objects.first()
-        
-        if title and default_category:
+        default_priority = Priority.objects.first() 
+        if title:
+            if not default_category:
+                default_category = Category.objects.create(name="General")
+            if not default_priority:
+                default_priority = Priority.objects.create(name="Medium", level=2)
+
             Task.objects.create(
                 title=title,
-                category=default_category, 
-                status='Pending',
-                deadline=timezone.now().date()
-            )
-        elif title and not default_category:
-            new_cat = Category.objects.create(name="General")
-            Task.objects.create(
-                title=title,
-                category=new_cat,
+                category=default_category,
+                priority=default_priority, 
                 status='Pending',
                 deadline=timezone.now().date()
             )
             
     return redirect('dashboard')
-
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     new_title = request.GET.get('title') 
