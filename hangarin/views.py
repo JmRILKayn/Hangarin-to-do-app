@@ -9,13 +9,11 @@ def dashboard(request, filter_type=None):
     category_name = request.GET.get('category')
     tasks = Task.objects.all().order_by('deadline')
     
-    # 1. Sidebar Page Filtering (Important/Planned)
     if filter_type == 'important':
-        tasks = tasks.filter(is_important=True) # Ensure 'is_important' is in your Task model
+        tasks = tasks.filter(is_important=True) 
     elif filter_type == 'planned':
         tasks = tasks.exclude(deadline__isnull=True)
     
-    # 2. Category Filtering (Sidebar list)
     if category_name:
         tasks = tasks.filter(category__name=category_name)
         
@@ -31,22 +29,29 @@ def dashboard(request, filter_type=None):
 def add_task(request):
     if request.method == "POST":
         title = request.POST.get('title')
-        # We grab the first category as a default
-        category = Category.objects.first() 
         
-        if title:
+        default_category = Category.objects.first()
+        
+        if title and default_category:
             Task.objects.create(
                 title=title,
-                category=category,
+                category=default_category, 
                 status='Pending',
-                # FIX: Add a default deadline (today) to stop the IntegrityError
-                deadline=timezone.now().date() 
+                deadline=timezone.now().date()
             )
+        elif title and not default_category:
+            new_cat = Category.objects.create(name="General")
+            Task.objects.create(
+                title=title,
+                category=new_cat,
+                status='Pending',
+                deadline=timezone.now().date()
+            )
+            
     return redirect('dashboard')
 
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-    # This reads the '?title=' part from the URL sent by the browser prompt
     new_title = request.GET.get('title') 
     
     if new_title:
