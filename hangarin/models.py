@@ -1,6 +1,5 @@
 from django.db import models
 
-# Base Model to be inherited by all other models
 class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -40,9 +39,8 @@ class Task(BaseModel):
         max_length=50, 
         choices=STATUS_CHOICES, 
         default="Pending"
-    ) # Use field choices for dropdowns [cite: 4071, 4075]
+    ) 
     
-    # Foreign Keys based on ERD [cite: 4034, 4038]
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     priority = models.ForeignKey(Priority, on_delete=models.CASCADE)
 
