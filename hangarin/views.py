@@ -1,29 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Task, Category, Priority, Note, SubTask
-from django.utils import timezone 
+from django.utils import timezone
+
+def home(request):
+    return render(request, 'hangarin/home.html')
 
 def dashboard(request, filter_type=None):
-    # Base Querysets
     tasks = Task.objects.all().order_by('deadline')
     notes = Note.objects.all()
     subtasks = SubTask.objects.all()
     
-    # Sidebar Filtering Logic
     if filter_type == 'important':
-        # Filter by high-level priority
         tasks = tasks.filter(priority__name__icontains="High")
     elif filter_type == 'planned':
         tasks = tasks.exclude(deadline__isnull=True)
-    elif filter_type == 'notes':
-        # This will tell the HTML to show the Notes table
-        pass 
-    elif filter_type == 'subtasks':
-        # This will tell the HTML to show the SubTasks table
-        pass
 
-    categories = Category.objects.all()
-    
-    # Stats for the top cards
     stats = {
         'total_tasks': Task.objects.count(),
         'total_notes': Note.objects.count(),
@@ -35,24 +26,23 @@ def dashboard(request, filter_type=None):
         'tasks': tasks,
         'notes': notes,
         'subtasks': subtasks,
-        'categories': categories,
         'filter_type': filter_type,
         'stats': stats
     })
 
-# --- Task Actions ---
 def add_task(request):
     if request.method == "POST":
         title = request.POST.get('title')
-        default_cat, _ = Category.objects.get_or_create(name="General")
-        default_prio, _ = Priority.objects.get_or_create(name="Medium")
-        
         if title:
+            # Safely get or create defaults to avoid IntegrityErrors
+            cat, _ = Category.objects.get_or_create(name="General")
+            prio, _ = Priority.objects.get_or_create(name="Medium")
+            
             Task.objects.create(
                 title=title,
-                description="", # Added to prevent null error
-                category=default_cat,
-                priority=default_prio,
+                description="No description provided.",
+                category=cat,
+                priority=prio,
                 status='Pending',
                 deadline=timezone.now()
             )
