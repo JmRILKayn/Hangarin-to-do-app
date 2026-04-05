@@ -15,12 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.contrib.auth import views as auth_views 
+from django.urls import path, include # Add include here
+from django.contrib.auth import views as auth_views
 from hangarin import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('pwa.urls')), # PWA Routes [cite: 138]
     path('', views.home, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/<str:filter_type>/', views.dashboard, name='dashboard_filter'),

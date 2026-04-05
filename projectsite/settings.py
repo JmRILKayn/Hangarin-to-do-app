@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'hangarin'
+    'hangarin',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,23 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+PWA_APP_NAME = 'Hangarin'
+PWA_APP_DESCRIPTION = "A Progressive Web App version of Hangarin Task Manager"
+PWA_APP_THEME_COLOR = '#020617' 
+PWA_APP_BACKGROUND_COLOR = '#f8fafc' 
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {'src': '/static/img/icon-192.png', 'sizes': '192x192'},
+    {'src': '/static/img/icon-512.png', 'sizes': '512x512'}
+]
+PWA_APP_ICONS_APPLE = [
+    {'src': '/static/img/icon-192.png', 'sizes': '192x192'},
+    {'src': '/static/img/icon-512.png', 'sizes': '512x512'}
+]
+PWA_APP_DIR = 'ltr'
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static/js', 'serviceworker.js')
